@@ -69,13 +69,27 @@ do
       {
         Console.WriteLine("Invalid Blog Id");
       }
-    else if (int.TryParse(blogIdoption, out int blogId2) && !blogs.Any(b => b.BlogId == blogId))
+    else if (int.TryParse(blogIdoption, out int blogId2) && !blogs.Any(b => b.BlogId == blogId2))
       {
         Console.WriteLine("There are no Blogs saved with that Id");
       }
-    else if (int.TryParse(blogIdoption, out int blogId3) && blogs.Any(b => b.BlogId == blogId))
+    else if (int.TryParse(blogIdoption, out int blogId3) && blogs.Any(b => b.BlogId == blogId3))
         {
-            
+          Console.WriteLine("Enter the Post title");
+          var PostTitle = Console.ReadLine();
+      if (string.IsNullOrEmpty(PostTitle))
+      {
+        Console.WriteLine("Post title cannot be null");
+      }
+      else if (!string.IsNullOrEmpty(PostTitle))
+            {
+                Console.WriteLine("Enter the Post content");
+                var PostContent = Console.ReadLine();
+                var post = new Post { Title = PostTitle, Content = PostContent, BlogId = blogId3 };
+                db.AddPost(post);
+                logger.Info("Post added - {PostTitle}", PostTitle);
+  
+            }
         }
 
   }
