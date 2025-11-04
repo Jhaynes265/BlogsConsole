@@ -1,4 +1,5 @@
-﻿﻿using NLog;
+﻿﻿using System.Security.Cryptography.X509Certificates;
+using NLog;
 string path = Directory.GetCurrentDirectory() + "//nlog.config";
 
 // create instance of Logger
@@ -60,9 +61,22 @@ do
     Console.WriteLine("Select the blog you would like to post to:");
     var blogs = db.Blogs.OrderBy(b => b.Name).ToList();
     foreach (var item in blogs)
-    {
-      Console.WriteLine($"{item.BlogId}) {item.Name}");
-    }    
+      {
+        Console.WriteLine($"{item.BlogId}) {item.Name}");
+      }
+    var blogIdoption = Console.ReadLine();
+    if (!int.TryParse(blogIdoption, out int blogId))
+      {
+        Console.WriteLine("Invalid Blog Id");
+      }
+    else if (int.TryParse(blogIdoption, out int blogId2) && !blogs.Any(b => b.BlogId == blogId))
+      {
+        Console.WriteLine("There are no Blogs saved with that Id");
+      }
+    else if (int.TryParse(blogIdoption, out int blogId3) && blogs.Any(b => b.BlogId == blogId))
+        {
+            
+        }
 
   }
   else if (choice == "4")
