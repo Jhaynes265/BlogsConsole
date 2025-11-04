@@ -57,6 +57,13 @@ do
   else if (choice == "3")
   {
     // Create and save a new Post
+    Console.WriteLine("Select the blog you would like to post to:");
+    var blogs = db.Blogs.OrderBy(b => b.Name).ToList();
+    foreach (var item in blogs)
+    {
+      Console.WriteLine($"{item.BlogId}) {item.Name}");
+    }    
+
   }
   else if (choice == "4")
   {
