@@ -13,11 +13,12 @@ var db = new DataContext();
 do
 {
   // display choices to user
+  Console.WriteLine("Enter your selection:");
   Console.WriteLine("1) Display all Blogs");
-  Console.WriteLine("2) Add a Blog");
+  Console.WriteLine("2) Add Blog");
   Console.WriteLine("3) Create Post");
   Console.WriteLine("4) Display Posts");
-  Console.WriteLine("Enter to quit");
+  Console.WriteLine("Enter q to quit");
 
   // input selection
   choice = Console.ReadLine();
@@ -28,7 +29,7 @@ do
     // Display all Blogs from the database
     var query = db.Blogs.OrderBy(b => b.Name);
 
-    Console.WriteLine("All blogs in the database:");
+    Console.WriteLine($"{db.Blogs.Count()} Blogs returned");
     foreach (var item in query)
     {
       Console.WriteLine(item.Name);
@@ -41,11 +42,17 @@ do
     // Create and save a new Blog
     Console.Write("Enter a name for a new Blog: ");
     var name = Console.ReadLine();
+    if (string.IsNullOrEmpty(name))
+        {
+            Console.WriteLine("Blog name cannot be null");
+        }
+    else if (!string.IsNullOrEmpty(name))
+        {
+          var blog = new Blog { Name = name };
 
-    var blog = new Blog { Name = name };
-
-    db.AddBlog(blog);
-    logger.Info("Blog added - {name}", name);
+          db.AddBlog(blog);
+          logger.Info("Blog added - {name}", name);
+        }
   }
   else if (choice == "3")
   {
