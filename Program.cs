@@ -110,9 +110,9 @@ do
       Console.WriteLine("Invalid Blog Id");
     }
     else if (int.TryParse(blogPostOption, out int blogId2) && !blogs.Any(b => b.BlogId == blogId2))
-        {
-            Console.WriteLine("There are no Blogs saved with that Id");
-        }
+    {
+      Console.WriteLine("There are no Blogs saved with that Id");
+    }
     else if (blogPostOption == "0")
     {
       var posts = db.Posts.OrderBy(p => p.Title).ToList();
@@ -123,6 +123,16 @@ do
         Console.WriteLine($"Blog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
       }
     }
+    else if (int.TryParse(blogPostOption, out int blogId3) && blogs.Any(b => b.BlogId == blogId3))
+        {
+            var posts = db.Posts.Where(p => p.BlogId == blogId3).OrderBy(p => p.Title).ToList();
+            Console.WriteLine($"{posts.Count} post(s) returned");
+
+            foreach (var post in posts)
+            {
+                Console.WriteLine($"Blog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
+            }
+        }
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
