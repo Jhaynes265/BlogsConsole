@@ -1,4 +1,5 @@
-﻿﻿using System.Security.Cryptography.X509Certificates;
+﻿﻿using System.Formats.Asn1;
+using System.Security.Cryptography.X509Certificates;
 using NLog;
 string path = Directory.GetCurrentDirectory() + "//nlog.config";
 
@@ -104,16 +105,24 @@ do
       Console.WriteLine($"{item.BlogId}) {item.Name}");
     }
     var blogPostOption = Console.ReadLine();
-    if (blogPostOption == "0")
+    if (!int.TryParse(blogPostOption, out int blogId))
+    {
+      Console.WriteLine("Invalid Blog Id");
+    }
+    else if (int.TryParse(blogPostOption, out int blogId2) && !blogs.Any(b => b.BlogId == blogId2))
         {
-            var posts = db.Posts.OrderBy(p => p.Title).ToList();
-            Console.WriteLine($"{posts.Count} post(s) returned");
-
-            foreach (var post in posts)
-            {
-                Console.WriteLine($"Blog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
-            }
+            Console.WriteLine("There are no Blogs saved with that Id");
         }
+    else if (blogPostOption == "0")
+    {
+      var posts = db.Posts.OrderBy(p => p.Title).ToList();
+      Console.WriteLine($"{posts.Count} post(s) returned");
+
+      foreach (var post in posts)
+      {
+        Console.WriteLine($"Blog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
+      }
+    }
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
