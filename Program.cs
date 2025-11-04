@@ -96,7 +96,40 @@ do
   else if (choice == "4")
   {
     // Display all Posts from a Blog
+    Console.WriteLine("Select the blog you would like to post to:");
+    Console.WriteLine("0) Posts from all Blogs");
+    var blogs = db.Blogs.OrderBy(b => b.Name).ToList();
+    foreach (var item in blogs)
+    {
+      Console.WriteLine($"{item.BlogId}) {item.Name}");
+    }
+    var blogPostOption = Console.ReadLine();
+    if (blogPostOption == "0")
+        {
+            var posts = db.Posts.OrderBy(p => p.Title).ToList();
+            Console.WriteLine($"{posts.Count} post(s) returned");
+
+            foreach (var post in posts)
+            {
+                Console.WriteLine($"Blog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
+            }
+        }
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// QUESTIONS
+// example different from class demo
+// ids out of order when displaying blogs
