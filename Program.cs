@@ -11,8 +11,6 @@ logger.Info("Program started");
 
 string? choice;
 
-var db = new DataContext();
-
 do
 {
   // display choices to user
@@ -30,6 +28,7 @@ do
 
   if (choice == "1")
   {
+    var db = new DataContext();
     // Display all Blogs from the database
     var query = db.Blogs.OrderBy(b => b.BlogId);
 
@@ -50,6 +49,7 @@ do
     var isValid = Validator.TryValidateObject(blog, context, results, true);
     if (isValid)
     {
+      var db = new DataContext();
       // check for unique name
       if (db.Blogs.Any(b => b.Name == blog.Name))
       {
@@ -75,6 +75,7 @@ do
   }
   else if (choice == "3")
   {
+    var db = new DataContext();
     // Create and save a new Post
     Console.WriteLine("Select the blog you would like to post to:");
     var blogs = db.Blogs.OrderBy(b => b.Name).ToList();
@@ -113,6 +114,7 @@ do
   }
   else if (choice == "4")
   {
+    var db = new DataContext();
     // Display all Posts from a Blog
     Console.WriteLine("Select the blog you would like to post to:");
     Console.WriteLine("0) Posts from all Blogs");
@@ -157,5 +159,35 @@ do
   {
     // delete blog
     Console.WriteLine("Choose the blog to delete:");
+        var db = new DataContext();
+    var blog = GetBlog(db);
+    if (blog != null)
+    {
+      // delete blog
+      db.DeleteBlog(blog);
+      logger.Info($"Blog (id: {blog.BlogId}) deleted");
+    }
+    else
+    {
+      logger.Error("Blog is null");
+    }
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
+
+
+
+static Blog? GetBlog(DataContext db)
+{
+  // display all blogs
+  var blogs = db.Blogs.OrderBy(b => b.BlogId);
+  foreach (Blog b in blogs)
+  {
+    Console.WriteLine($"{b.BlogId}: {b.Name}");
+  }
+  if (int.TryParse(Console.ReadLine(), out int BlogId))
+  {
+    Blog blog = db.Blogs.FirstOrDefault(b => b.BlogId == BlogId)!;
+    return blog;
+  }
+  return null;
+}

@@ -12,6 +12,13 @@ public class DataContext : DbContext
     this.SaveChanges();
   }
 
+    public void DeleteBlog(Blog blog)
+  {
+    this.Blogs.Remove(blog);
+    this.SaveChanges();
+  }
+
+
   public void AddPost(Post post)
   {
     this.Posts.Add(post);
