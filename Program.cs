@@ -20,6 +20,7 @@ do
   Console.WriteLine("3) Create Post");
   Console.WriteLine("4) Display Posts");
   Console.WriteLine("5) Delete Blog");
+  Console.WriteLine("6) Edit Blog");
   Console.WriteLine("Enter q to quit\n");
 
   // input selection
@@ -172,7 +173,18 @@ do
       logger.Error("Blog is null");
     }
   }
-} while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
+    else if (choice == "6")
+  {
+    // edit blog
+    Console.WriteLine("Choose the blog to edit:");
+    var db = new DataContext();
+    var blog = GetBlog(db);
+    if (blog != null)
+    {
+      // TODO: input blog
+    }
+  }
+} while (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6");
 
 
 
