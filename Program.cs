@@ -1,5 +1,6 @@
 ﻿﻿using System.Formats.Asn1;
 using System.Security.Cryptography.X509Certificates;
+using System.ComponentModel.DataAnnotations;
 using NLog;
 string path = Directory.GetCurrentDirectory() + "//nlog.config";
 
@@ -20,6 +21,7 @@ do
   Console.WriteLine("2) Add Blog");
   Console.WriteLine("3) Create Post");
   Console.WriteLine("4) Display Posts");
+  Console.WriteLine("5) Delete Blog");
   Console.WriteLine("Enter q to quit\n");
 
   // input selection
@@ -41,18 +43,35 @@ do
   {
     // Create and save a new Blog
     Console.Write("Enter a name for a new Blog: ");
-    var name = Console.ReadLine();
-    if (string.IsNullOrEmpty(name))
-        {
-            Console.WriteLine("Blog name cannot be null");
-        }
-    else if (!string.IsNullOrEmpty(name))
-        {
-          var blog = new Blog { Name = name };
+    var blog = new Blog { Name = Console.ReadLine() };
+    ValidationContext context = new(blog, null, null);
+    List<ValidationResult> results = [];
 
-          db.AddBlog(blog);
-          logger.Info("Blog added - {name}", name);
-        }
+    var isValid = Validator.TryValidateObject(blog, context, results, true);
+    if (isValid)
+    {
+      // check for unique name
+      if (db.Blogs.Any(b => b.Name == blog.Name))
+      {
+        // generate validation error
+        isValid = false;
+        results.Add(new ValidationResult("Blog name exists", ["Name"]));
+      }
+      else
+      {
+        logger.Info("Validation passed");
+        // save blog to db
+        db.AddBlog(blog);
+        logger.Info("Blog added - {name}", blog.Name);
+      }
+    }
+    if (!isValid)
+    {
+      foreach (var result in results)
+      {
+        logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+      }
+    }
   }
   else if (choice == "3")
   {
@@ -132,5 +151,11 @@ do
                 Console.WriteLine($"\nBlog: {post.Blog.Name}\nTitle: {post.Title}\nContent: {post.Content}");
             }
         }
+  }
+
+  else if (choice == "5")
+  {
+    // delete blog
+    Console.WriteLine("Choose the blog to delete:");
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
