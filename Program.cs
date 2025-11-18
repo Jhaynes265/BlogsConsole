@@ -158,8 +158,14 @@ do
     var blog = GetBlog(db);
     if (blog != null)
     {
-      // TODO: input blog
-    }
+      // input blog
+      Blog? UpdatedBlog = InputBlog(db, logger);
+      if (UpdatedBlog != null)
+      {
+        UpdatedBlog.BlogId = blog.BlogId;
+        db.EditBlog(UpdatedBlog);
+        logger.Info($"Blog (id: {blog.BlogId}) updated");
+      }    }
   }
 } while (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6");
 
